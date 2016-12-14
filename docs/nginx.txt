@@ -1,0 +1,48 @@
+map $http_origin $cors_header {
+    default "";
+    "~https?://www\.knigopis\.com$" "$http_origin";
+    "~https?://www\.knigopis\.com\.dev$" "$http_origin";
+    "~https?://www\.knigopis\.com\.lh$" "$http_origin";
+}
+
+server {
+        server_name api.knigopis.com;
+
+        location / {
+              proxy_pass         http://127.0.0.1:8080/;
+              proxy_redirect     off;
+
+              proxy_set_header   Host             $host;
+              proxy_set_header   X-Real-IP        $remote_addr;
+              proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+
+              add_header 'Access-Control-Allow-Origin' $cors_header;
+              add_header 'Access-Control-Allow-Methods' 'POST,GET,OPTIONS,PUT,DELETE,PATCH';
+              add_header 'Access-Control-Allow-Credentials' 'true';
+              add_header 'Access-Control-Allow-Headers' 'DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+
+
+             #preflight request
+             if ($request_method = 'OPTIONS') {
+               add_header 'Access-Control-Max-Age' '1728000';
+               add_header 'Content-Type' 'text/plain charset=UTF-8';
+               add_header 'Content-Length' '0';
+               add_header 'Access-Control-Allow-Credentials' 'true';
+               add_header 'Access-Control-Allow-Headers' 'DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+
+               add_header 'Access-Control-Allow-Origin' $cors_header;
+               add_header 'Access-Control-Allow-Methods' 'POST,GET,OPTIONS,PUT,DELETE,PATCH';
+               return 204;
+             }
+
+
+        }
+
+
+        # deny access to .htaccess files, if Apache's document root
+        # concurs with nginx's one
+        #
+        location ~ /\.ht {
+                deny all;
+        }
+}
