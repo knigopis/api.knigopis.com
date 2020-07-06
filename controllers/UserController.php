@@ -20,7 +20,7 @@ class UserController extends BaseRestController
     public function actionGetCredentials($token)
     {
         if ($token) {
-            $s = file_get_contents('http://ulogin.ru/token.php?token=' . $token . '&host=' . $_SERVER['HTTP_HOST']);
+            $s = file_get_contents('http://ulogin.ru/token.php?token=' . $token . '&host=www.knigopis.com');
             $userData = json_decode($s, true);
             if (isset($userData['uid'])) {
                 $lang = Yii::$app->request->get('lang');
@@ -34,7 +34,7 @@ class UserController extends BaseRestController
 
                 $user = User::getUserByULoginData($userData);
                 $accessToken = $user->getAccessToken();
-                //set cookie for futher requests
+                // Set cookie for further requests
                 Yii::$app->user->login($user, 3600 * 24 * 365);
 
                 $cred = [

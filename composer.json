@@ -1,19 +1,23 @@
 {
-    "name": "api.knigopis.com",
+    "name": "knigopis/api",
     "description": "API of www.knigopis.com",
     "homepage": "http://www.knigopis.com/",
     "type": "project",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.4.0",
-        "yiisoft/yii2": ">=2.0.5"
+        "yiisoft/yii2": "2.0.35",
+        "ext-json": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "*",
         "yiisoft/yii2-gii": "*"
     },
     "config": {
-        "process-timeout": 1800
+        "process-timeout": 1800,
+        "fxp-asset": {
+            "enabled": false
+        }
     },
     "scripts": {
         "post-create-project-cmd": [
@@ -37,5 +41,11 @@
             "npm-asset-library": "vendor/npm",
             "bower-asset-library": "vendor/bower"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
 }

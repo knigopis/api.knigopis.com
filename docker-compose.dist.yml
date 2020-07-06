@@ -1,0 +1,16 @@
+version: "3.5"
+services:
+  app:
+    build:
+      context: ./
+    volumes:
+      - ./:/api.knigopis.com
+      - /home/roman/projects/repo.knigopis.com:/var/repo.knigopis.com
+    working_dir: /api.knigopis.com
+  nginx:
+    build:
+      context: ./nginx
+    volumes:
+      - ./public:/api.knigopis.com/public
+    ports:
+    - 7877:80

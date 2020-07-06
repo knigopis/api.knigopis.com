@@ -28,3 +28,5 @@ phpunit.phar
 
 config/params_private.php
 /YII_ENV_DEV
+
+docker-compose.yml

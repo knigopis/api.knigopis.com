@@ -1,7 +1,6 @@
 API.KNIGOPIS.COM
 =================
-REST API
-
+REST API for knigopis.com - a service with books which you have read.
 
 Deployment
 ------------------
@@ -11,25 +10,38 @@ Deployment
 4. Copy `config/params.php` to `config/params_private.php` and edit it.
 5. Set write permissions on _runtime_ dir
 
+Deployment with the docker and docker-compose
+----------------------
+1. `cp docker-compose.dist.yml docker-compose.yml`
+2. `sudo bash -c "chmod 777 ./runtime; chgrp 33 -R .; chmod g+rw -R ."`
+3. `docker-compose up -d --build`
+4. `docker-compose exec app composer install`
+
+Replace the path with your location of the repo and run:
+`sudo bash -c "chgrp 33 -R /var/repo.knigopis.com; chmod g+rw -R /var/repo.knigopis.com"`
+
+Additional:
+`touch YII_ENV_DEV` for debug
+
 Development
 ------------------
-You need a auth token from uLogin. Get it from js console at www.knigopis.com or your dev www (try to login)  
+You need an auth token from uLogin. Get it from js console at www.knigopis.com or your dev www (try to login)  
 When you get _auth token_, get _access token_ from API `GET /user/get-credentials?token=auth_token`.  
 Insert it in every request when **[user is required]**.  
 You can pass it with GET-param as `access-token=token_string`
 or add to header as `Authorization: Bearer token_string`  
   
 **UPDATE**: Now API sets auth cookie after successful request to `GET /user/get-credentials?token=auth_token`  
-and you do not need store and send access-token every request (less REST but more secure, because cookie is http only). 
+and you do not need to store and send access-token every request (less REST but more secure, because cookie is http only). 
 
 Pay attention to trailing slash. If you make request `GET /books/` it will return `404`. You need `GET /books`.  
 
 Implemented
 ------------------
-`GET /user/get-credentials?token=auth_token` - get access token by uLogin auth token for futher requests, also returns details of the user  
+`GET /user/get-credentials?token=auth_token` - get access token by uLogin auth token for further requests, also returns details of the user  
 `POST /users/get-credentials` - get access token by uLogin auth token (as above) passed in POST (token=auth_token). More secure method.  
-`GET /users` - get user info who is owner of access token (_is not REST, should not be used_) **[user is required]**  
-`GET /users/current` - get user info who is owner of access token **[user is required]**  
+`GET /users` - get user info who is the owner of access token (_is not REST, should not be used_) **[user is required]**  
+`GET /users/current` - get user info who is the owner of access token **[user is required]**  
 `GET /users/:id` - get user info by user id  
 `PUT /users/:id` - update user info, pass values _nickname_ and _profile_ in POST **[user is required]**  
 `GET /users/:id/books` - get all books owned by userId  
@@ -52,14 +64,9 @@ Implemented
 
 `GET /wishes` - get wish list owned by user **[user is required]**  
 `GET /wishes/:id` - get wish by wish id  
-`POST /wishes` - create new wush record (pass values in POST) **[user is required]**  
+`POST /wishes` - create new wish record (pass values in POST) **[user is required]**  
 `PUT /wishes/:id` - update wish **[user is required]**  
 `DELETE /wishes/:id` - delete wish by wish id **[user is required]**  
-
-Tools and help
-------------------
-http://www.yiiframework.com/doc-2.0/guide-rest-quick-start.html - examples of requests with cUrl,  
-Try addon https://addons.mozilla.org/ru/firefox/addon/httprequester/ for making POST, PUT, DELETE requests.  
 
 
 License
