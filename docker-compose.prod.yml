@@ -7,11 +7,15 @@ services:
       - ./:/api.knigopis.com
       - /var/repo.knigopis.com:/var/repo.knigopis.com
     working_dir: /api.knigopis.com
+    restart: always
+    network_mode: bridge
   nginx:
     build:
       context: ./nginx
     volumes:
       - ./public:/api.knigopis.com/public
+    network_mode: bridge
+    restart: always
     environment:
       HTTPS_METHOD: "noredirect"
       VIRTUAL_HOST: "api2.knigopis.com"
