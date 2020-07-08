@@ -12,5 +12,7 @@ services:
       context: ./nginx
     volumes:
       - ./public:/api.knigopis.com/public
-    ports:
-    - 7877:80
+    environment:
+      HTTPS_METHOD: "noredirect"
+      VIRTUAL_HOST: "api2.knigopis.com"
+      LETSENCRYPT_HOST: "api2.knigopis.com"
