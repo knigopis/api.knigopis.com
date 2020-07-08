@@ -14,9 +14,14 @@ services:
       context: ./nginx
     volumes:
       - ./public:/api.knigopis.com/public
-    network_mode: bridge
+    networks:
+      - nginx-proxy
     restart: always
     environment:
       HTTPS_METHOD: "noredirect"
       VIRTUAL_HOST: "api2.knigopis.com"
       LETSENCRYPT_HOST: "api2.knigopis.com"
+
+networks:
+  nginx-proxy:
+    external: true
