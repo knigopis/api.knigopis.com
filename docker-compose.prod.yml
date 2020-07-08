@@ -8,13 +8,15 @@ services:
       - /var/repo.knigopis.com:/var/repo.knigopis.com
     working_dir: /api.knigopis.com
     restart: always
-    network_mode: bridge
+    networks:
+      - default
   nginx:
     build:
       context: ./nginx
     volumes:
       - ./public:/api.knigopis.com/public
     networks:
+      - default
       - nginx-proxy
     restart: always
     environment:
