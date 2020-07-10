@@ -21,8 +21,8 @@ services:
     restart: always
     environment:
       HTTPS_METHOD: "noredirect"
-      VIRTUAL_HOST: "api2.knigopis.com"
-      LETSENCRYPT_HOST: "api2.knigopis.com"
+      VIRTUAL_HOST: "api.knigopis.com"
+      LETSENCRYPT_HOST: "api.knigopis.com"
 
 networks:
   nginx-proxy:
