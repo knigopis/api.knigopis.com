@@ -29,11 +29,11 @@ $config = [
             'identityClass' => 'app\models\User',
             'identityCookie' => [
                 'name' => '_identity',
-                'domain' => '.knigopis.com',
+                'domain' => 'knigopis.com',
             ],
         ],
         'session' => [
-            'cookieParams' => array('domain' => '.knigopis.com'),
+            'cookieParams' => array('domain' => 'knigopis.com'),
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
