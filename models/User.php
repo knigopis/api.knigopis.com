@@ -2,9 +2,18 @@
 
 namespace app\models;
 
-class User extends GitModel implements \yii\web\IdentityInterface
+use app\helpers\Csv;
+use Yii;
+use yii\base\Security;
+use yii\helpers\BaseFileHelper;
+use yii\helpers\Json;
+use yii\web\IdentityInterface;
+
+/**
+ * @property string $id
+ */
+class User extends GitModel implements IdentityInterface
 {
-    
     protected $_attributes = array(
         'id' => null,
         'lang' => null,
@@ -25,13 +34,12 @@ class User extends GitModel implements \yii\web\IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        $cache = \Yii::$app->cache;
+        // We use this method with access token auth type only
+        // It is not used with cookie-session method.
+        $cache = Yii::$app->cache;
         $userData = $cache->get($token);
         if ($userData !== false) {
-            $user = new static($userData);
-            $user->setAccessToken($token);
-            $user->setIsNewRecord(false);
-            return $user;
+            return static::findById($userData['id']);
         }
 
         return null;
@@ -46,9 +54,10 @@ class User extends GitModel implements \yii\web\IdentityInterface
     }
 
     /**
-     * 
      * @param array $userData
      * @return User
+     * @throws GitModelException
+     * @throws \yii\base\Exception
      */
     public static function getUserByULoginData($userData)
     {
@@ -77,11 +86,11 @@ class User extends GitModel implements \yii\web\IdentityInterface
             $user->updateIfNeeded($userData);
         }
 
-        $sec = new \yii\base\Security;
+        $sec = new Security;
         $accessToken = $sec->generateRandomString(24);
 
-        $cache = \Yii::$app->cache;
-        $cache->set($accessToken, $user->getAllAttributes());
+        $cache = Yii::$app->cache;
+        $cache->set($accessToken, ['id' => $user->getId()]);
         
         $user->setAccessToken($accessToken);
         
@@ -114,13 +123,15 @@ class User extends GitModel implements \yii\web\IdentityInterface
         } else {
             /* We do not have the instance with accessToken while trying to login by the cookie,
              * but we can find the identity by the accessToken and compare it with this instance */
-            $cache = \Yii::$app->cache;
+            $cache = Yii::$app->cache;
             $userData = $cache->get($authKey);
             if ($userData && isset($userData['id']) && $userData['id'] === $this->id) {
                 $this->_accessToken = $authKey;
                 return true;
             }
         }
+
+        return false;
     }
 
     public static function findIdentity($id)
@@ -141,8 +152,7 @@ class User extends GitModel implements \yii\web\IdentityInterface
             throw new GitModelException("userId is empty");
         }
         $userId3 = substr($userId, 0, 3);
-        $path = "users/$userId3/$userId";
-        return $path;
+        return "users/$userId3/$userId";
     }
     
     /**
@@ -168,7 +178,7 @@ class User extends GitModel implements \yii\web\IdentityInterface
 
     public function afterSave($insert, $changedAttributes) {
         if (!$insert && $this->_accessToken) {
-            $cache = \Yii::$app->cache;
+            $cache = Yii::$app->cache;
             $cache->set($this->_accessToken, $this->getAllAttributes());
         }
         if ($insert || isset($changedAttributes['booksCount'])) {
@@ -181,16 +191,14 @@ class User extends GitModel implements \yii\web\IdentityInterface
     {
         $userId = $this->id;
         $userId3 = substr($userId, 0, 3);
-        $fullpath = "users/$userId3/$userId/books";
-        return $fullpath;
+        return "users/$userId3/$userId/books";
     }
     
     public function getRelativeWishesPath()
     {
         $userId = $this->id;
         $userId3 = substr($userId, 0, 3);
-        $fullpath = "users/$userId3/$userId/wishes";
-        return $fullpath;
+        return "users/$userId3/$userId/wishes";
     }
     
     public function canUpdateBook(Book $book)
@@ -255,8 +263,7 @@ class User extends GitModel implements \yii\web\IdentityInterface
     protected static function _getLatestUsersIndexPath()
     {
         $indexLatestFile = 'latest_users.json';
-        $indexLatestPath = \yii\helpers\BaseFileHelper::normalizePath(self::getRepoPath() . '/'. $indexLatestFile);
-        return $indexLatestPath;
+        return BaseFileHelper::normalizePath(self::getRepoPath() . '/'. $indexLatestFile);
     }
 
 
@@ -295,7 +302,7 @@ class User extends GitModel implements \yii\web\IdentityInterface
         $latestUsers = array_slice($latestUsers, 0, 30, true);
 
         if ($lastUserUpdate !== strtotime($this->updatedAt)) {
-            $json = \yii\helpers\Json::encode($latestUsers, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            $json = Json::encode($latestUsers, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             file_put_contents($file, $json);
             GitModel::commitFilesWithMessage($file, 'Updated latest users');
         }
@@ -307,7 +314,7 @@ class User extends GitModel implements \yii\web\IdentityInterface
         $users = null;
         if (is_file($file) && is_readable($file)) {
             $content = file_get_contents($file);
-            $users = \yii\helpers\Json::decode($content, true);
+            $users = Json::decode($content, true);
         }
         if (!$users) {
             $users = [];
@@ -318,9 +325,9 @@ class User extends GitModel implements \yii\web\IdentityInterface
     public static function findIdByParseId($parseId)
     {
         $indexFile = 'parse_ids_users.csv';
-        $indexFilePath = \yii\helpers\BaseFileHelper::normalizePath(self::getRepoPath() . '/'. $indexFile);
+        $indexFilePath = BaseFileHelper::normalizePath(self::getRepoPath() . '/'. $indexFile);
         if (is_readable($indexFilePath)) {
-            $row = \app\helpers\Csv::findRowByFirstValue($indexFilePath, $parseId);
+            $row = Csv::findRowByFirstValue($indexFilePath, $parseId);
             if ($row) {
                 return $row[1];
             }
@@ -373,5 +380,4 @@ class User extends GitModel implements \yii\web\IdentityInterface
             GitModel::commitTransaction("Copied book from " . escapeshellarg($otherUser->id) . " to " . escapeshellarg($this->id));
         }
     }
-
 }

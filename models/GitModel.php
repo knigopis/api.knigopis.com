@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use yii\base\InvalidArgumentException;
+
 class GitModel extends \yii\base\Model
 {
 
@@ -35,6 +37,8 @@ class GitModel extends \yii\base\Model
         if (isset($this->_attributes[self::$_primaryKeyName])) {
             return $this->_attributes[self::$_primaryKeyName];
         }
+
+        return null;
     }
 
     public function getBaseFileName()
@@ -157,6 +161,8 @@ class GitModel extends \yii\base\Model
             }
             return $res;
         }
+
+        return false;
     }
 
     protected function jsonEncode()
@@ -224,6 +230,8 @@ class GitModel extends \yii\base\Model
             $record->afterFind();
             return $record;
         }
+
+        return null;
     }
 
     public static function findAllInPathByExtension($relativePath, $extension = null)
@@ -279,9 +287,8 @@ class GitModel extends \yii\base\Model
 
     /**
      * 
-     * @param array $files
+     * @param array|string $files
      * @param string $message
-     * @return type
      */
     public static function commitFilesWithMessage($files, $message)
     {
@@ -372,7 +379,7 @@ class GitModel extends \yii\base\Model
 
     /**
      * 
-     * @param type $id
+     * @param string $id
      * @return static
      * @throws GitModelException
      */
@@ -411,7 +418,7 @@ class GitModel extends \yii\base\Model
      * This method is overridden so that attributes and related objects can be accessed like properties.
      *
      * @param string $name property name
-     * @throws \yii\base\InvalidParamException if relation name is wrong
+     * @throws \yii\base\InvalidArgumentException if relation name is wrong
      * @return mixed property value
      * @see getAttribute()
      */
@@ -500,7 +507,7 @@ class GitModel extends \yii\base\Model
      * Sets the named attribute value.
      * @param string $name the attribute name
      * @param mixed $value the attribute value.
-     * @throws InvalidParamException if the named attribute does not exist.
+     * @throws InvalidArgumentException if the named attribute does not exist.
      * @see hasAttribute()
      */
     public function setAttribute($name, $value)
@@ -508,7 +515,7 @@ class GitModel extends \yii\base\Model
         if ($this->hasAttribute($name)) {
             $this->_attributes[$name] = $value;
         } else {
-            throw new InvalidParamException(get_class($this) . ' has no attribute named "' . $name . '".');
+            throw new InvalidArgumentException(get_class($this) . ' has no attribute named "' . $name . '".');
         }
     }
 
