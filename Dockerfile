@@ -11,6 +11,9 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php -r "unlink('composer-setup.php');" \
   && mkdir /var/www/.composer && chown "${WEB_USER_ID}" /var/www/.composer
 
-RUN apt-get update && apt-get install git unzip -y
+RUN apt-get update && apt-get install git unzip locales -y \ 
+  && locale-gen en_US.UTF-8 \
+  && locale-gen ru_RU.UTF-8 \
+  && update-locale
 
 USER ${WEB_USER_ID}
