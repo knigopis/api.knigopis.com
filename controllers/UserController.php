@@ -151,4 +151,38 @@ class UserController extends BaseRestController
         $user->copyBooksFromUser($otherUser);
         return ['result' => 'ok'];
     }
+
+    public function actionExportBooks()
+    {
+        $path = Yii::$app->user->identity->getRelativeBooksPath();
+        $books = Book::findAllInPathByExtension($path);
+        Book::sortListByDate($books);
+        $cleanBooks = [];
+        foreach ($books as $book) {
+            $row = $book->toArray();
+            unset($row['user']);
+            unset($row['lang']);
+            $cleanBooks[] = $row;
+        }
+        if ($cleanBooks) {
+            $tmpName = tempnam(sys_get_temp_dir(), 'books');
+            $file = fopen($tmpName, 'w');
+            foreach ($cleanBooks as $bookRow) {
+                fputcsv($file, $bookRow);
+            }
+            fclose($file);
+            header('Content-Description: File Transfer');
+            header('Content-Type: text/csv');
+            header('Content-Disposition: attachment; filename=books.csv');
+            header('Content-Transfer-Encoding: binary');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($tmpName));
+            readfile($tmpName);
+            @unlink($tmpName);
+        } else {
+            echo 'no books';
+        }
+    }
 }

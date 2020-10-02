@@ -56,6 +56,7 @@ $config = [
                 'POST users/get-credentials' => 'user/get-credentials-post',
                 'GET books/latest' => 'book/latest',
                 'GET books/latest-notes' => 'book/latest-notes',
+                'GET users/export-books' => 'user/export-books',
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['book', 'user', 'wish'], 'tokens' => ['{id}' => '<id:[a-zA-Z0-9-_]+>']],
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['subscription'], 'tokens' => ['{id}' => '<subUserId:[a-zA-Z0-9-_]+>']],
                 'user/<action>' => 'user/<action>',
