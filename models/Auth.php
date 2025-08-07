@@ -57,7 +57,7 @@ class Auth extends GitModel
                 'phash' => password_hash($this->_attributes['password'], PASSWORD_DEFAULT),
             ]);
 
-            $this->_filesToCommit[] = 'auth.csv';
+            static::$_transactionFilesToCommit[] = 'auth.csv';
 
             $userData = static::getULoginData($this->_attributes['username'], $lang);
 

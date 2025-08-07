@@ -4,7 +4,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "username": "newuser7",
+  "username": "newuser8",
   "password": "securepassword",
   "lang": "ru"
 }
