@@ -38,8 +38,8 @@ Pay attention to trailing slash. If you make request `GET /books/` it will retur
 
 Implemented
 ------------------
-`POST /auth/register` - register new user, pass values _username_, _password_ and _language_ in POST
-`POST /auth/login` - login user, pass values _username_, _password_ and _language_ in POST
+`POST /auth/register` - register new user, pass values _username_, _password_ and _language_ in POST  
+`POST /auth/login` - login user, pass values _username_, _password_ and _language_ in POST  
 
 `GET /user/get-credentials?token=auth_token` - get access token by uLogin auth token for further requests, also returns details of the user  
 `POST /users/get-credentials` - get access token by uLogin auth token (as above) passed in POST (token=auth_token). More secure method.  
