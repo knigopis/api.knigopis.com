@@ -16,7 +16,7 @@ class Auth extends GitModel
     {
         return [
             ['username', 'required'],
-            ['username', 'string', 'min' => 6, 'max' => 30],
+            ['username', 'string', 'min' => 4, 'max' => 30],
             ['username', 'match', 'pattern' => '/^[a-z0-9_.@-]+$/i'],
             ['password', 'required'],
             ['password', 'string', 'min' => 1, 'max' => 255],

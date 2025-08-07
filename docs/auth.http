@@ -11,6 +11,20 @@ Accept: application/json
 
 >> ./responses/reg-{{$timestamp}}.json
 
+### Register error
+POST {{host}}/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "a",
+  "password": "b",
+  "lang": "ru"
+}
+
+>> ./responses/reg-er-{{$timestamp}}.json
+
+
 ### Login
 POST {{host}}/auth/login
 Content-Type: application/json
