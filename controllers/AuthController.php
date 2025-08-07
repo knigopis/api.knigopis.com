@@ -60,6 +60,6 @@ class AuthController extends BaseRestController
             return $cred;
         }
 
-        throw new HttpException(400, 'Bad request');
+        throw new HttpException(400, 'Cannot login');
     }
 }
