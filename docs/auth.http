@@ -1,0 +1,25 @@
+### Register
+POST {{host}}/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "newuser7",
+  "password": "securepassword",
+  "lang": "ru"
+}
+
+>> ./responses/reg-{{$timestamp}}.json
+
+### Login
+POST {{host}}/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "newuser5",
+  "password": "securepassword",
+  "lang": "ru"
+}
+
+>> ./responses/login-{{$timestamp}}.json

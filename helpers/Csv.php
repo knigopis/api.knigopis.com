@@ -4,7 +4,7 @@ namespace app\helpers;
 
 class Csv
 {
-    
+
     public static function readFile($csvFile)
     {
         $rows = array();
@@ -16,10 +16,10 @@ class Csv
         }
         return $rows;
     }
-    
+
     /**
      * Returns associative array indexed by first value in row
-     * 
+     *
      * @param string $csvFile
      * @return array
      */
@@ -34,15 +34,19 @@ class Csv
         }
         return $rows;
     }
-    
+
     /**
-     * 
+     *
      * @param string $csvFile
      * @param string $firstValue
      * @return false|array
      */
     public static function findRowByFirstValue($csvFile, $firstValue)
     {
+        if (!file_exists($csvFile)) {
+            return false;
+        }
+
         $row = false;
         if (($handle = fopen($csvFile, "r")) !== false) {
             while (($data = fgetcsv($handle, 1000, ",")) !== false) {
@@ -55,10 +59,10 @@ class Csv
         }
         return $row;
     }
-    
+
     /**
      * Writes rows to csv file
-     * 
+     *
      * @param string $csvFile
      * @param array $rows
      */
@@ -72,7 +76,7 @@ class Csv
             fclose($handle);
         }
     }
-    
+
     public static function addRow($csvFile, $row)
     {
         $handle = fopen($csvFile, "a");
@@ -81,10 +85,10 @@ class Csv
             fclose($handle);
         }
     }
-    
+
     /**
      * Returns associative array indexed by first value in row and contains second value only
-     * 
+     *
      * @param string $csvFile
      * @return array
      */
