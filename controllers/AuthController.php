@@ -62,4 +62,9 @@ class AuthController extends BaseRestController
 
         throw new HttpException(400, 'Cannot login');
     }
+
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
+    }
 }

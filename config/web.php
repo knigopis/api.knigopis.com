@@ -51,6 +51,7 @@ $config = [
             'rules' => [
                 'POST auth/register' => 'auth/register',
                 'POST auth/login' => 'auth/login',
+                'POST auth/logout' => 'auth/logout',
                 'POST subscriptions/<subUserId:[a-zA-Z0-9-_]+>' => 'subscription/create',
                 'POST users/copy-books-from-user/<otherUserId:[a-zA-Z0-9-_]+>' => 'user/copy-books-from-user',
                 'GET users/latest' => 'user/latest',

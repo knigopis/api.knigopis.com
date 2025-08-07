@@ -37,3 +37,10 @@ Accept: application/json
 }
 
 >> ./responses/login-{{$timestamp}}.json
+
+### Logout
+POST {{host}}/auth/logout
+Content-Type: application/json
+Accept: application/json
+
+>> ./responses/logout-{{$timestamp}}.json
