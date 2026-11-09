@@ -1,3 +1,10 @@
+> **Не работает с 2026 года.** Это API старой Книгописи: с осени 2026 года оно не отвечает, новых записей не будет.
+> Записи лежат в [repo2.knigopis.com](https://github.com/knigopis/repo2.knigopis.com). Новая Книгопись —
+> [knigopis-p2p](https://github.com/knigopis/knigopis-p2p): своего API у неё нет, записи — события Nostr
+> ([протокол](https://github.com/knigopis/knigopis-p2p/blob/master/docs/protocol.md)).
+>
+> *The old Knigopis API, offline since 2026. See [knigopis/knigopis-p2p](https://github.com/knigopis/knigopis-p2p).*
+
 API.KNIGOPIS.COM
 =================
 REST API for knigopis.com - a service with books which you have read.
